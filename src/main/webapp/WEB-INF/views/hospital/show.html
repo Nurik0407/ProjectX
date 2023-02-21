@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Show</title>
+
+
+    <style>
+        .snippet-container {
+            width: 800px;
+            display: flex;
+            background-color: paleturquoise;
+            margin-top: 60px;
+            margin-left: 250px;
+
+        }
+
+
+
+
+        .card {
+            width: 400px;
+            margin-left: 250px;
+            line-height: 35px;
+            padding: 20px;
+        }
+
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .second-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 10px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #3e8e41;
+        }
+
+        .back {
+            position: absolute;
+            top: 30px;
+            left: 90%;
+            transform: translate(-50%, -50%);
+        }
+
+        .card-title {
+            color: black;
+            font-size: 25px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        p {
+            color: black;
+            font-size: 15px;
+            margin: 0;
+        }
+
+        h6 {
+            font-size: 20px;
+            margin: 0;
+        }
+
+        button {
+            background-color: #3e8e41;
+            padding: 10px;
+            color: #cccccc;
+            border-radius: 10px;
+            margin-top: 30px;
+            outline: none;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #0cd313;
+        }
+
+        button:active {
+            background-color: #ab0707;
+        }
+
+        .back {
+            border: 2px solid red;
+            padding: 10px 17px;
+            border-radius: 10px;
+        }
+
+        .back:hover {
+            background-color: red;
+            color: white;
+        }
+
+        .link {
+            text-decoration: none;
+            color: red;
+        }
+
+        .body {
+            background-image: url("https://i.pinimg.com/236x/a8/83/f5/a883f516aadcae20af1c6dfb14f5e387.jpg");
+            background-size: cover;
+        }
+        .card-img-top{
+            width: 150%;
+        }
+        .img-container {
+            width: 100%;
+        }
+
+    </style>
+
+</head>
+<body class="body">
+
+<div class="back">
+    <a href="/hospital" class="link">back</a>
+</div>
+
+<div class="container">
+    <a th:href="@{/department/{hospitalId}(hospitalId=${hospital.getId()})}" class="button">Departments</a>
+    <a th:href="@{/doctor/{hospitalId}(hospitalId=${hospital.getId()})}" class="button">Doctors</a>
+    <a th:href="@{/patient/{hospitalId}(hospitalId=${hospital.getId()})}" class="button">Patients</a>
+    <a th:href="@{/appointment/{hospitalId}(hospitalId=${hospital.id})}" class="button">Appointments</a>
+</div>
+<div class="second-container">
+    <a th:href="@{/department/{hospitalId}/new(hospitalId=${hospital.getId()})}" class="button">Add department</a>
+    <a th:href="@{/doctor/{hospitalId}/new(hospitalId=${hospital.getId()})}" class="button">Add doctor</a>
+    <a th:href="@{/patient/new}" class="button">Add patient</a>
+    <a th:href="@{/appointment/{hospitalId}/new(hospitalId=${hospital.id})}" class="button">Add appointment</a>
+
+</div>
+<div class="snippet-container">
+    <div class="img-container">
+        <img th:src="${hospital.getImage()}"
+             class="card-img-top" >
+    </div>
+    <div class="card" th:object="${hospital}">
+        <h5 class="card-title" th:text="${hospital.getName()}">Name</h5>
+        <p class="card-text" th:text="${hospital.getAddress()}">Address</p>
+        <h6>Doctors</h6>
+        <p class="card-text" th:text="${doctors}">Doctors</p>
+        <h6>Patients</h6>
+        <p class="card-text" th:text="${patients}">Patients</p>
+        <div>
+<!--            <button>-->
+<!--                <a th:href="@{/hospital/{id}/edit(id=${hospital.getId()})}">Edit</a>-->
+<!--            </button>-->
+            <form th:action="@{/hospital/{id}/edit(id=${hospital.getId()})}">
+                <button>Edit</button>
+            </form>
+            <br>
+            <form th:method="DELETE" th:action="@{/hospital/{id}/delete(id=${hospital.getId()})}">
+                <button>Delete</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+
+</body>
+
+</html>
