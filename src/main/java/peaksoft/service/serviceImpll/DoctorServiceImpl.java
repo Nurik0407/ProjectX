@@ -64,11 +64,7 @@ public class DoctorServiceImpl implements DoctorService {
             newDoctor.setFirstName(doctor.getFirstName());
             newDoctor.setLastName(doctor.getLastName());
             newDoctor.setImage(doctor.getImage());
-            for (Doctor doctor1 : doctorRepository.getAll()) {
-                if (doctor1.getEmail().equals(doctor.getEmail())) {
-                    throw new RuntimeException("Email already registered!");
-                }
-            }
+
             if (!doctor.getEmail().contains("@")) {
                 throw new RuntimeException("Incorrect email!");
             }
@@ -90,11 +86,7 @@ public class DoctorServiceImpl implements DoctorService {
             newDoctor.setFirstName(doctor.getFirstName());
             newDoctor.setLastName(doctor.getLastName());
             newDoctor.setImage(doctor.getImage());
-            for (Doctor doctor1 : doctorRepository.getAll()) {
-                if (doctor1.getEmail().equals(doctor.getEmail())) {
-                    throw new RuntimeException("Email already registered!");
-                }
-            }
+
             if (!doctor.getEmail().contains("@")) {
                 throw new RuntimeException("Incorrect email!");
             }

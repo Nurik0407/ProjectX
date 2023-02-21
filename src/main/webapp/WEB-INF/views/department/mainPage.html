@@ -79,6 +79,7 @@
         <th scope="col">Hospital</th>
         <th scope="col">Update</th>
         <th scope="col">Delete</th>
+        <th scope="col">Doctors</th>
     </tr>
     </thead>
     <tbody>
@@ -98,6 +99,13 @@
                 <input type="submit" class="btn btn-outline-primary" th:value="  Delete  "/>
             </form>
         </td>
+        <td>
+            <form th:method="GET"
+                  th:action="@{/department/{hospitalId}/{departmentId}/doctors(hospitalId=${hospitalId},departmentId=${department.getId()})}">
+                <input type="submit" class="btn btn-outline-primary" th:value="  Doctors  "/>
+            </form>
+        </td>
+
     </tr>
     </tbody>
 </table>

@@ -51,34 +51,21 @@
 </head>
 <body class="body">
 
-<div class="newDoctor">
-    <a th:href="@{/doctor/{hospitalId}/new(hospitalId=${hospitalId})}" class="btn btn-outline-info">New doctor</a>
-</div>
-
 <div class="back">
-    <a th:href="@{/hospital/{hospitalId}/byId(hospitalId=${hospitalId})}" class="btn btn-outline-danger">back</a>
+    <a th:href="@{/department/{id}(id=${hospitalId})}" class="btn btn-outline-danger">back</a>
 </div>
 
 <div class="hos">
-    <h1 th:text="${hospital.getName()}">Name</h1>
+    <h1 th:text="${department}">Name</h1>
 </div>
 
 <div class="container">
-    <div class="card" th:each="doctor : ${doctors}">
-        <img th:src="${doctor.getImage()}" class="card-img-top" alt="...">
+    <div class="card"  th:each="doctor : ${doctors}">
+        <img th:src="${doctor.getImage()}" class="card-img-top" alt="..." >
         <div class="card-body">
             <h5 class="card-title" th:text="${doctor.firstName+' '+doctor.getLastName()}">name</h5>
             <p class="card-text" th:text="${doctor.getPosition()}">position</p>
             <p class="card-text" th:text="${doctor.getEmail()}">email</p>
-
-            <a th:href="@{/doctor/{hospitalId}/{id}/edit(hospitalId=${hospitalId},id=${doctor.getId()})}"
-               class="btn btn-primary">Edit</a>
-
-            <form th:method="DELETE"
-                  th:action="@{/doctor/{hospitalId}/{id}/delete(hospitalId=${hospitalId},id=${doctor.getId()})}">
-                <input type="submit" class="btn btn-primary" value="Delete">
-            </form>
-
         </div>
     </div>
 </div>

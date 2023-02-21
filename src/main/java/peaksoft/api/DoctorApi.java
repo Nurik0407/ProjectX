@@ -2,6 +2,7 @@ package peaksoft.api;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -56,8 +57,14 @@ public class DoctorApi {
             model.addAttribute("departments",departmentService.getAll(hospitalId));
             return "doctor/new";
         }
-        doctorService.save(doctor, hospitalId);
-        return "redirect:/doctor/" + hospitalId;
+        try {
+            doctorService.save(doctor, hospitalId);
+            return "redirect:/doctor/" + hospitalId;
+        }catch (DataIntegrityViolationException e){
+            model.addAttribute("Email","This email already exists in the database");
+            return "doctor/new";
+        }
+
     }
 
     @DeleteMapping("/{hospitalId}/{id}/delete")

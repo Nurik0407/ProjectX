@@ -1,6 +1,7 @@
 package peaksoft.service;
 
 import peaksoft.models.Department;
+import peaksoft.models.Doctor;
 
 import java.util.List;
 
@@ -24,4 +25,5 @@ public interface DepartmentService {
 
     List<Department> getAllByDoctorId(Long id);
 
+    List<Doctor> getAllDoByDepId(Long departmentId);
 }

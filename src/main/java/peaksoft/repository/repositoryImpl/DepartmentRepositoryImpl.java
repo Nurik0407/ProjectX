@@ -6,6 +6,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
 import peaksoft.models.Department;
+import peaksoft.models.Doctor;
 import peaksoft.models.Hospital;
 import peaksoft.repository.DepartmentRepository;
 
@@ -107,5 +108,16 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
         }
     }
 
+    @Override
+    public List<Doctor> getAllDocByDepId(Long departmentId) {
+        try {
+            return en.createQuery("""
+                    select d from Doctor d join d.departments l where l.id=:id
+                    """, Doctor.class).setParameter("id", departmentId).getResultList();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        throw new RuntimeException();
+    }
 
 }

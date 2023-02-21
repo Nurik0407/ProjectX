@@ -147,5 +147,16 @@ public class DepartmentServiceImpl implements DepartmentService {
         throw new RuntimeException();
     }
 
+    @Override
+    public List<Doctor> getAllDoByDepId(Long departmentId) {
+        try {
+
+            return departmentRepository.getAllDocByDepId(departmentId);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        throw new RuntimeException();
+    }
+
 
 }

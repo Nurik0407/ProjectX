@@ -42,7 +42,7 @@ public class Doctor {
     private String position;
     @NotEmpty(message = "Email must by not empty!")
     @Email(message = "Incorrect email!")
-    @Column(unique = true)
+    @Column(name = "Email",unique = true)
     private String email;
 
     @NotEmpty(message = "Fill in the field!")

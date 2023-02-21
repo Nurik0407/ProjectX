@@ -77,5 +77,13 @@ public class DepartmentApi {
         return "redirect:/department/" + hospitalId;
     }
 
+    @GetMapping("/{hospitalId}/{departmentId}/doctors")
+    public String getAllDoctorsByDepartmentId(@PathVariable Long departmentId,@PathVariable Long hospitalId,Model model){
+        model.addAttribute("department",departmentService.findById(departmentId).getName());
+       model.addAttribute("doctors", departmentService.getAllDoByDepId(departmentId));
+       model.addAttribute(hospitalId);
+        return "department/doctors";
+    }
+
 }
 

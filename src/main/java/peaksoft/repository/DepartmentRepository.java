@@ -1,6 +1,7 @@
 package peaksoft.repository;
 
 import peaksoft.models.Department;
+import peaksoft.models.Doctor;
 
 import java.util.List;
 
@@ -25,5 +26,6 @@ public interface DepartmentRepository {
     List<Department> getAllByHospitalId(Long id);
     List<Department> getAllByDoctorId(Long id);
 
+    List<Doctor> getAllDocByDepId(Long departmentId);
 }
 
