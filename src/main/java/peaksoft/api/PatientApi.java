@@ -50,24 +50,22 @@ public class PatientApi {
     public String save(@PathVariable Long hospitalId,@ModelAttribute("patient") @Valid Patient patient,
                        BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("hospitals", hospitalService.getAllHospital());
             return "patient/new";
         }
         try {
             patientService.save(patient,hospitalId);
             return "redirect:/patient/" + hospitalId;
         } catch (DataIntegrityViolationException e) {
-            model.addAttribute("hospitals", hospitalService.getAllHospital());
-            model.addAttribute("phone_number", "Number already registered!");
             model.addAttribute("Email", "This email already exists in the database");
             return "patient/new";
+        }catch (Exception e){
+            throw new RuntimeException();
         }
     }
 
     @GetMapping("/{hospitalId}/{id}/edit")
     public String edit(@PathVariable Long id, @PathVariable Long hospitalId, Model model) {
         model.addAttribute("patient", patientService.findById(id));
-        model.addAttribute("hospitals", hospitalService.getAllHospital());
         model.addAttribute("hospitalId", hospitalId);
         return "patient/edit";
     }
@@ -76,7 +74,6 @@ public class PatientApi {
     public String update(@PathVariable Long id, @ModelAttribute("patient") @Valid Patient patient,
                          BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("hospitals", hospitalService.getAllHospital());
             model.addAttribute("patient", patient);
             return "patient/edit";
         }
@@ -85,13 +82,12 @@ public class PatientApi {
             return "redirect:/patient/" + patient.getHospitalId();
         } catch (DataIntegrityViolationException e) {
             model.addAttribute("patient", patientService.findById(id));
-            model.addAttribute("hospitals", hospitalService.getAllHospital());
             model.addAttribute("hospitalId", patientService.findById(id).getHospitalId());
             model.addAttribute("Email", "This email already exists in the database");
-            model.addAttribute("phone_number", "Number already registered!");
             return "patient/edit";
+        }catch (Exception e){
+            throw new RuntimeException();
         }
-
     }
 
     @DeleteMapping("/{hospitalId}/{id}/delete")

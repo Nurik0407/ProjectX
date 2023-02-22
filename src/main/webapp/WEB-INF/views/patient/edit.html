@@ -134,9 +134,6 @@
         <div style="color: red" th:if="${#fields.hasErrors('phoneNumber')}">
             <span th:errors="*{phoneNumber}"></span>
         </div>
-        <div th:if="${phone_number}">
-            <p style="color: red;">[[${phone_number}]]</p>
-        </div>
 
         <br>
         <div>

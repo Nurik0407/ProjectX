@@ -87,8 +87,6 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public void delete(Long id, Long hospitalId) {
         try {
-
-
             for (int i = 0; i < hospitalRepository.findById(hospitalId).getAppointmentList().size(); i++) {
                 if (hospitalRepository.findById(hospitalId).getAppointmentList() != null) {
                     if (hospitalRepository.findById(hospitalId).getAppointmentList().get(i).getId().equals(id)) {

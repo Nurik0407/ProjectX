@@ -45,9 +45,6 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public void save(Patient patient,Long hospitalId) {
         try {
-            if (!patient.getPhoneNumber().startsWith("+996")) {
-                throw new RuntimeException("Number must start with +996");
-            }
             patient.setHospital(hospitalRepository.findById(hospitalId));
             patientRepository.save(patient);
         } catch (Exception e) {
@@ -64,9 +61,6 @@ public class PatientServiceImpl implements PatientService {
             patient.setLastName(newPatient.getLastName());
             patient.setEmail(newPatient.getEmail());
             patient.setGender(newPatient.getGender());
-            if (!newPatient.getPhoneNumber().startsWith("+996")) {
-                throw new RuntimeException("Number must start with +996");
-            }
             patient.setPhoneNumber(newPatient.getPhoneNumber());
             patient.setHospital(hospitalRepository.findById(newPatient.getHospitalId()));
             patientRepository.update(id, patient);

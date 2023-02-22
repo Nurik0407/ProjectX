@@ -36,7 +36,7 @@ public class Patient {
     @Column(name = "last_name")
     private String lastName;
     @Pattern(regexp = "^\\+996\\d{9}$", message = "Phone number must start with +996 and contain 12 digits")
-    @Column(name = "phone_number",unique = true)
+    @Column(name = "phone_number")
     private String phoneNumber;
     private Gender gender;
     @NotEmpty(message = "Email must by not empty!")
