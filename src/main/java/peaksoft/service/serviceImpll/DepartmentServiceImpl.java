@@ -40,7 +40,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     public List<Department> getAll(Long id) {
         try {
             return departmentRepository.getAll(id);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         throw new RuntimeException();
@@ -51,7 +51,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     public Department findById(Long id) {
         try {
             return departmentRepository.findById(id);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         throw new RuntimeException();
@@ -63,22 +63,22 @@ public class DepartmentServiceImpl implements DepartmentService {
         try {
             for (Department depart : departmentRepository.getAll(id)) {
                 if (depart.getName().equals(department.getName())) {
-                    throw new RuntimeException(" Such a separation already exists");
+                    throw new RuntimeException();
                 }
             }
             department.setHospital(hospitalRepository.findById(id));
             departmentRepository.save(department);
-        }catch (Exception e){
-            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException();
         }
     }
 
     @Override
     public void update(Long id, Department newDepartment) {
         try {
-            for (Department department : departmentRepository.getAll(newDepartment.getHospitalId())) {
-                if (department.getName().equals(newDepartment.getName())) {
-                    throw new RuntimeException(" Such a separation already exists");
+            for (Department department : departmentRepository.getAll(departmentRepository.findById(id).getHospital().getId())) {
+                if (department.getName().equals(newDepartment.getName()) && !department.getId().equals(id)) {
+                    throw new RuntimeException();
                 }
             }
             departmentRepository.update(id, newDepartment);
@@ -120,7 +120,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                 }
             }
             departmentRepository.delete(id);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
@@ -130,7 +130,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         try {
             return departmentRepository.getAllByHospitalId(id);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         throw new RuntimeException();
@@ -141,7 +141,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     public List<Department> getAllByDoctorId(Long id) {
         try {
             return departmentRepository.getAllByDoctorId(id);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         throw new RuntimeException();
@@ -152,7 +152,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         try {
 
             return departmentRepository.getAllDocByDepId(departmentId);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         throw new RuntimeException();

@@ -15,6 +15,7 @@ import peaksoft.repository.HospitalRepository;
 import peaksoft.service.DoctorService;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -65,10 +66,6 @@ public class DoctorServiceImpl implements DoctorService {
             newDoctor.setLastName(doctor.getLastName());
             newDoctor.setImage(doctor.getImage());
 
-            if (!doctor.getEmail().contains("@")) {
-                throw new RuntimeException("Incorrect email!");
-            }
-
             newDoctor.setEmail(doctor.getEmail());
             newDoctor.setPosition(doctor.getPosition());
             newDoctor.setHospital(hospitalRepository.findById(id));
@@ -106,13 +103,15 @@ public class DoctorServiceImpl implements DoctorService {
     public void delete(Long id) {
         try {
             Doctor doctor = doctorRepository.findById(id);
-            for (int i = 0; i < hospitalRepository.getAllHospital().size(); i++) {
-                for (int j = 0; j < hospitalRepository.getAllHospital().get(i).getAppointmentList().size(); j++) {
-                    for (int l = 0; l < doctor.getAppointmentList().size(); l++) {
-                        if (hospitalRepository.getAllHospital().get(i).getAppointmentList().get(j).getId().equals(doctor.getAppointmentList().get(l).getId())) {
-                            hospitalRepository.getAllHospital().get(i).getAppointmentList().remove(doctor.getAppointmentList().get(l));
-                            appointmentRepository.delete(doctor.getAppointmentList().get(l).getId());
-                        }
+
+            List<Appointment> appointments = doctor.getHospital().getAppointmentList();
+            if (appointments != null) {
+                Iterator<Appointment> iterator = appointments.iterator();
+                while (iterator.hasNext()) {
+                    Appointment appointment = iterator.next();
+                    if (appointment.getDoctor() != null && appointment.getDoctor().getId().equals(id)) {
+                        iterator.remove();
+                        appointmentRepository.delete(appointment.getId());
                     }
                 }
             }

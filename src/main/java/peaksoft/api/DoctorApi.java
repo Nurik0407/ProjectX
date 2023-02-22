@@ -57,7 +57,6 @@ public class DoctorApi {
             model.addAttribute("departments", departmentService.getAll(hospitalId));
             return "doctor/new";
         }
-
         try {
             doctorService.save(doctor, hospitalId);
             return "redirect:/doctor/" + hospitalId;

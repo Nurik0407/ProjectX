@@ -45,17 +45,18 @@ public class DepartmentApi {
 
     @PostMapping("/{hospitalId}/save")
     public String save(@PathVariable Long hospitalId, @ModelAttribute("department") @Valid Department department
-            , BindingResult bindingResult) {
-        try {
-            if (bindingResult.hasErrors()) {
-                return "department/new";
-            }
-            departmentService.save(department, hospitalId);
-            return "redirect:/department/" + hospitalId;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+            , BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "department/new";
         }
-        throw new RuntimeException();
+        try {
+            departmentService.save(department, hospitalId);
+        } catch (RuntimeException e) {
+            model.addAttribute("errorMessage", "Department already exist!");
+            model.addAttribute(hospitalId);
+            return "department/new";
+        }
+        return "redirect:/department/" + hospitalId;
     }
 
     @GetMapping("/{hospitalId}/{id}/edit")
@@ -72,8 +73,15 @@ public class DepartmentApi {
             model.addAttribute("department", department);
             return "department/edit";
         }
-        departmentService.update(id, department);
-        return "redirect:/department/" + hospitalId;
+        try {
+            departmentService.update(id, department);
+            return "redirect:/department/" + hospitalId;
+        }catch (RuntimeException e){
+            model.addAttribute("department", departmentService.findById(id));
+            model.addAttribute(hospitalId);
+            model.addAttribute("errorMessage","Department already exist!");
+            return "department/edit";
+        }
     }
 
     @DeleteMapping("/{hospitalId}/{id}/delete")

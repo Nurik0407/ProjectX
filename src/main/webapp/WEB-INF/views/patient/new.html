@@ -133,6 +133,9 @@
         <div style="color: red" th:if="${#fields.hasErrors('phoneNumber')}">
             <span th:errors="*{phoneNumber}"></span>
         </div>
+        <div th:if="${errorPhoneNumber}" class="alert alert-danger" role="alert">
+            <p style="color:red;" th:text="${errorPhoneNumber}"></p>
+        </div>
 
         <br>
         <div>

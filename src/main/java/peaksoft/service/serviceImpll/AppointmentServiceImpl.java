@@ -48,7 +48,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     public Appointment findById(Long id) {
         try {
             return appointmentRepository.findById(id);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         throw new RuntimeException();
@@ -69,7 +69,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             newAppointment.setDepartment(departmentService.findById(appointment.getDepartmentId()));
             hospital.addAppointment(newAppointment);
             appointmentRepository.save(newAppointment);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
@@ -87,15 +87,16 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public void delete(Long id, Long hospitalId) {
         try {
-            for (int i = 0; i < hospitalRepository.findById(hospitalId).getAppointmentList().size(); i++) {
-                if (hospitalRepository.findById(hospitalId).getAppointmentList() != null) {
-                    if (hospitalRepository.findById(hospitalId).getAppointmentList().get(i).getId().equals(id)) {
-                        hospitalRepository.findById(hospitalId).getAppointmentList().remove(appointmentRepository.findById(id));
+            List<Appointment> appointments = hospitalRepository.findById(hospitalId).getAppointmentList();
+            if (appointments != null) {
+                for (int i = 0; i < appointments.size(); i++) {
+                    if (appointments.get(i).getId().equals(id)) {
+                        appointments.remove(appointmentRepository.findById(id));
                     }
                 }
             }
             appointmentRepository.delete(id);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }

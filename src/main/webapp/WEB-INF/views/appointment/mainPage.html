@@ -49,7 +49,6 @@
     </thead>
     <tbody>
     <tr th:each="app : ${appointments}">
-        <!--        <th scope="row" th:text="__${stat.index}__ + 1" ></th>-->
         <td th:text="${app.getLocalDate()}">Recording date</td>
         <td th:text="${app.getPatient().getFirstName() + '  ' + app.getPatient().getLastName()}">Patient</td>
         <td th:text="${app.getDoctor().getFirstName()+' '+app.getDoctor().getLastName()}">Doctor</td>

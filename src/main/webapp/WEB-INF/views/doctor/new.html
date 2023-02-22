@@ -100,7 +100,7 @@
         <div class="form-group">
             <label for="departmentIdes">Select department:</label>
             <select id="departmentIdes" name="departmentIdes" class="form-control" multiple required
-                    th:field="*{departmentIdes}" >
+                    th:field="*{departmentIdes}">
                 <option th:each="department : ${departments}"
                         th:value="${department.getId()}"
                         th:text="${department.getName()}"></option>

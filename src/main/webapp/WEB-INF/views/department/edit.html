@@ -75,6 +75,9 @@
         <div style="color: red" th:if="${#fields.hasErrors('name')}">
             <span th:errors="*{name}"></span>
         </div>
+        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+            <p style="color:red;" th:text="${errorMessage}"></p>
+        </div>
 
         <button type="submit">Update</button>
     </form>

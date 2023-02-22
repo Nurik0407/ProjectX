@@ -54,6 +54,7 @@
             cursor: pointer;
             font-size: 16px;
         }
+
         .back {
             position: absolute;
             top: 30px;
@@ -65,8 +66,8 @@
 </head>
 <body>
 
-<div class="back" >
-    <a  th:href="@{/hospital/{id}/byId(id=${hospitalId})}" class="btn btn-outline-danger">back</a>
+<div class="back">
+    <a th:href="@{/hospital/{id}/byId(id=${hospitalId})}" class="btn btn-outline-danger">back</a>
 </div>
 
 <div class="form-container">
@@ -75,9 +76,12 @@
 
         <label for="name">Name:</label>
 
-        <input type="text" th:field="*{name}" id="name" name="name" >
+        <input type="text" th:field="*{name}" id="name" name="name">
         <div style="color: red" th:if="${#fields.hasErrors('name')}">
             <span th:errors="*{name}"></span>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+            <p style="color:red;" th:text="${errorMessage}"></p>
         </div>
 
         <button type="submit">Send</button>

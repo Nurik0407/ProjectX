@@ -41,40 +41,42 @@ public class PatientApi {
     @GetMapping("/{hospitalId}/new")
     public String newPatient(@PathVariable Long hospitalId, Model model) {
         model.addAttribute("patient", new Patient());
-        model.addAttribute("hospitals", hospitalService.getAllHospital());
         model.addAttribute(hospitalId);
         return "patient/new";
     }
 
     @PostMapping("/{hospitalId}/save")
-    public String save(@PathVariable Long hospitalId,@ModelAttribute("patient") @Valid Patient patient,
+    public String save(@PathVariable Long hospitalId, @ModelAttribute("patient") @Valid Patient patient,
                        BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "patient/new";
         }
         try {
-            patientService.save(patient,hospitalId);
+            patientService.save(patient, hospitalId);
             return "redirect:/patient/" + hospitalId;
         } catch (DataIntegrityViolationException e) {
             model.addAttribute("Email", "This email already exists in the database");
             return "patient/new";
-        }catch (Exception e){
-            throw new RuntimeException();
+        } catch (RuntimeException e) {
+            model.addAttribute("errorPhoneNumber", "Phone number already exist!");
+            model.addAttribute(hospitalId);
+            return "patient/new";
         }
     }
 
     @GetMapping("/{hospitalId}/{id}/edit")
     public String edit(@PathVariable Long id, @PathVariable Long hospitalId, Model model) {
         model.addAttribute("patient", patientService.findById(id));
-        model.addAttribute("hospitalId", hospitalId);
+        model.addAttribute( hospitalId);
         return "patient/edit";
     }
 
-    @PutMapping("/{id}/update")
-    public String update(@PathVariable Long id, @ModelAttribute("patient") @Valid Patient patient,
+    @PutMapping("/{hospitalId}/{id}/update")
+    public String update(@PathVariable Long hospitalId,@PathVariable Long id, @ModelAttribute("patient") @Valid Patient patient,
                          BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("patient", patient);
+            model.addAttribute( hospitalId);
             return "patient/edit";
         }
         try {
@@ -82,11 +84,14 @@ public class PatientApi {
             return "redirect:/patient/" + patient.getHospitalId();
         } catch (DataIntegrityViolationException e) {
             model.addAttribute("patient", patientService.findById(id));
-            model.addAttribute("hospitalId", patientService.findById(id).getHospitalId());
+            model.addAttribute( hospitalId);
             model.addAttribute("Email", "This email already exists in the database");
             return "patient/edit";
-        }catch (Exception e){
-            throw new RuntimeException();
+        } catch (RuntimeException e) {
+            model.addAttribute("patient", patientService.findById(id));
+            model.addAttribute( hospitalId);
+            model.addAttribute("errorPhoneNumber", "Phone number already exist!");
+            return "patient/edit";
         }
     }
 

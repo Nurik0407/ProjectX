@@ -43,12 +43,19 @@ public class PatientServiceImpl implements PatientService {
 
     @Transactional
     @Override
-    public void save(Patient patient,Long hospitalId) {
+    public void save(Patient patient, Long hospitalId) {
         try {
             patient.setHospital(hospitalRepository.findById(hospitalId));
+            if (patientRepository.getAll() != null) {
+                for (Patient pat : patientRepository.getAll()) {
+                    if (pat.getPhoneNumber().equals(patient.getPhoneNumber())) {
+                        throw new RuntimeException();
+                    }
+                }
+            }
             patientRepository.save(patient);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            throw new RuntimeException();
         }
     }
 
@@ -57,15 +64,22 @@ public class PatientServiceImpl implements PatientService {
     public void update(Long id, Patient newPatient) {
         try {
             Patient patient = patientRepository.findById(id);
+
+            for (Patient pat : patientRepository.getAll()) {
+                if (pat.getPhoneNumber().equals(newPatient.getPhoneNumber()) && !pat.getId().equals(id)) {
+                    throw new RuntimeException();
+                }
+            }
+
             patient.setFirstName(newPatient.getFirstName());
             patient.setLastName(newPatient.getLastName());
             patient.setEmail(newPatient.getEmail());
             patient.setGender(newPatient.getGender());
             patient.setPhoneNumber(newPatient.getPhoneNumber());
-            patient.setHospital(hospitalRepository.findById(newPatient.getHospitalId()));
             patientRepository.update(id, patient);
+
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            throw new RuntimeException();
         }
     }
 

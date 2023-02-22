@@ -97,7 +97,7 @@
 </div>
 
 <div class="form-container">
-    <form th:action="@{/patient/{id}/update(id=${patient.getId()})}" th:object="${patient}" th:method="PUT">
+    <form th:action="@{/patient/{hospitalId}/{id}/update(hospitalId=${hospitalId},id=${patient.getId()})}" th:object="${patient}" th:method="PUT">
 
         <label for="firstName">Name:</label>
         <input type="text" th:field="*{firstName}" id="firstName" name="firstName">
@@ -133,6 +133,9 @@
         <input type="text" placeholder="+996" id="phoneNumber" th:field="*{phoneNumber}" name="phoneNumber"/>
         <div style="color: red" th:if="${#fields.hasErrors('phoneNumber')}">
             <span th:errors="*{phoneNumber}"></span>
+        </div>
+        <div th:if="${errorPhoneNumber}" class="alert alert-danger" role="alert">
+            <p style="color:red;" th:text="${errorPhoneNumber}"></p>
         </div>
 
         <br>
