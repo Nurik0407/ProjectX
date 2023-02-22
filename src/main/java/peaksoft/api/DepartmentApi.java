@@ -46,11 +46,16 @@ public class DepartmentApi {
     @PostMapping("/{hospitalId}/save")
     public String save(@PathVariable Long hospitalId, @ModelAttribute("department") @Valid Department department
             , BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "department/new";
+        try {
+            if (bindingResult.hasErrors()) {
+                return "department/new";
+            }
+            departmentService.save(department, hospitalId);
+            return "redirect:/department/" + hospitalId;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-        departmentService.save(department, hospitalId);
-        return "redirect:/department/" + hospitalId;
+        throw new RuntimeException();
     }
 
     @GetMapping("/{hospitalId}/{id}/edit")
@@ -78,10 +83,10 @@ public class DepartmentApi {
     }
 
     @GetMapping("/{hospitalId}/{departmentId}/doctors")
-    public String getAllDoctorsByDepartmentId(@PathVariable Long departmentId,@PathVariable Long hospitalId,Model model){
-        model.addAttribute("department",departmentService.findById(departmentId).getName());
-       model.addAttribute("doctors", departmentService.getAllDoByDepId(departmentId));
-       model.addAttribute(hospitalId);
+    public String getAllDoctorsByDepartmentId(@PathVariable Long departmentId, @PathVariable Long hospitalId, Model model) {
+        model.addAttribute("department", departmentService.findById(departmentId).getName());
+        model.addAttribute("doctors", departmentService.getAllDoByDepId(departmentId));
+        model.addAttribute(hospitalId);
         return "department/doctors";
     }
 

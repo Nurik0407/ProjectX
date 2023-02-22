@@ -33,7 +33,7 @@
 <body class="body">
 
 <div class="newPatient">
-    <a th:href="@{/patient/new}" class="btn btn-outline-info">New patient</a>
+    <a th:href="@{/patient/{hospitalId}/new(hospitalId=${hospitalId})}"  class="btn btn-outline-info">New patient</a>
 </div>
 
 <div class="back">

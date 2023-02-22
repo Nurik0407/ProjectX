@@ -52,16 +52,19 @@ public class DoctorApi {
 
     @PostMapping("/{hospitalId}/save")
     public String save(@PathVariable Long hospitalId, @ModelAttribute("doctor") @Valid Doctor doctor,
-                       BindingResult bindingResult,Model model) {
+                       BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("departments",departmentService.getAll(hospitalId));
+            model.addAttribute("departments", departmentService.getAll(hospitalId));
             return "doctor/new";
         }
+
         try {
             doctorService.save(doctor, hospitalId);
             return "redirect:/doctor/" + hospitalId;
-        }catch (DataIntegrityViolationException e){
-            model.addAttribute("Email","This email already exists in the database");
+        } catch (DataIntegrityViolationException e) {
+            model.addAttribute("hospitalId", hospitalId);
+            model.addAttribute("departments", departmentService.getAll(hospitalId));
+            model.addAttribute("Email", "This email already exists in the database");
             return "doctor/new";
         }
 
@@ -82,14 +85,21 @@ public class DoctorApi {
 
     @PutMapping("/{hospitalId}/{id}/update")
     public String update(@PathVariable("hospitalId") Long hospitalId, @PathVariable("id") Long id, @ModelAttribute("doctor") @Valid Doctor doctor,
-                         BindingResult bindingResult,Model model) {
+                         BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("doctor",doctor);
-            model.addAttribute("departments",departmentService.getAllByHospitalId(hospitalId));
+            model.addAttribute("doctor", doctor);
+            model.addAttribute("departments", departmentService.getAllByHospitalId(hospitalId));
             return "doctor/edit";
         }
-        doctor.setHospitalId(hospitalId);
-        doctorService.update(id, doctor);
-        return "redirect:/doctor/" + hospitalId;
+        try {
+            doctor.setHospitalId(hospitalId);
+            doctorService.update(id, doctor);
+            return "redirect:/doctor/" + hospitalId;
+        } catch (DataIntegrityViolationException e) {
+            model.addAttribute("departments",departmentService.getAllByHospitalId(hospitalId));
+            model.addAttribute("Email", "This email already exists in the database");
+            return "doctor/edit";
+        }
+
     }
 }

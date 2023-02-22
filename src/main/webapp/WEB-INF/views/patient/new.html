@@ -83,7 +83,6 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
         span:hover {
             background-color: #eee;
         }
@@ -93,11 +92,11 @@
 
 
 <div class="back">
-    <a href="/patient" class="btn btn-outline-danger">back</a>
+    <a  th:href="@{/patient/{hospitalId}(hospitalId=${hospitalId})}" class="btn btn-outline-danger">back</a>
 </div>
 
 <div class="form-container">
-    <form th:action="@{/patient/save}" th:object="${patient}" th:method="POST">
+    <form th:action="@{/patient/{hospitalId}/save(hospitalId=${hospitalId})}" th:object="${patient}" th:method="POST">
 
         <label for="name">Name:</label>
         <input type="text" th:field="*{firstName}" id="name" name="name">
@@ -125,23 +124,19 @@
         <div style="color: red" th:if="${#fields.hasErrors('email')}">
             <span th:errors="*{email}"></span>
         </div>
+        <div th:if="${Email}">
+            <p style="color: red;">[[${Email}]]</p>
+        </div>
 
         <label for="phoneNumber">Phone number:</label>
         <input type="text" placeholder="+996" id="phoneNumber" th:field="*{phoneNumber}" name="phoneNumber">
         <div style="color: red" th:if="${#fields.hasErrors('phoneNumber')}">
             <span th:errors="*{phoneNumber}"></span>
         </div>
-
-        <div class="form-group">
-            <label for="departments">Select hospital:</label>
-            <select id="departments" name="departments" required class="form-control"
-                    th:field="*{hospitalId}" >
-                <option value="">-- Select hospital --</option>
-                <option th:each="hospital : ${hospitals}"
-                        th:value="${hospital.getId()}"
-                        th:text="${hospital.getName()}"></option>
-            </select>
+        <div th:if="${phone_number}">
+            <p style="color: red;">[[${phone_number}]]</p>
         </div>
+
         <br>
         <div>
             <button type="submit">Send</button>

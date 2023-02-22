@@ -14,7 +14,7 @@ public interface PatientService {
 
     Patient findById(Long id);
 
-    void save(Patient patient);
+    void save(Patient patient,Long hospitalId);
 
     void update(Long id, Patient newPatient);
 

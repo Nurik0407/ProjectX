@@ -149,7 +149,7 @@
 <div class="second-container">
     <a th:href="@{/department/{hospitalId}/new(hospitalId=${hospital.getId()})}" class="button">Add department</a>
     <a th:href="@{/doctor/{hospitalId}/new(hospitalId=${hospital.getId()})}" class="button">Add doctor</a>
-    <a th:href="@{/patient/new}" class="button">Add patient</a>
+    <a th:href="@{/patient/{hospitalId}/new(hospitalId=${hospital.getId()})}" class="button">Add patient</a>
     <a th:href="@{/appointment/{hospitalId}/new(hospitalId=${hospital.id})}" class="button">Add appointment</a>
 
 </div>

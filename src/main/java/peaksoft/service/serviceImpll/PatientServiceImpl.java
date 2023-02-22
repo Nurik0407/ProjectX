@@ -43,17 +43,12 @@ public class PatientServiceImpl implements PatientService {
 
     @Transactional
     @Override
-    public void save(Patient patient) {
+    public void save(Patient patient,Long hospitalId) {
         try {
-            for (Patient patient1 : patientRepository.getAll()) {
-                if (patient1.getPhoneNumber().equals(patient.getPhoneNumber())){
-                    throw new RuntimeException("This phone number already exists");
-                }
-            }
-            if (!patient.getPhoneNumber().startsWith("+996")){
+            if (!patient.getPhoneNumber().startsWith("+996")) {
                 throw new RuntimeException("Number must start with +996");
             }
-            patient.setHospital(hospitalRepository.findById(patient.getHospitalId()));
+            patient.setHospital(hospitalRepository.findById(hospitalId));
             patientRepository.save(patient);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -69,12 +64,7 @@ public class PatientServiceImpl implements PatientService {
             patient.setLastName(newPatient.getLastName());
             patient.setEmail(newPatient.getEmail());
             patient.setGender(newPatient.getGender());
-            for (Patient patient1 : patientRepository.getAll()) {
-                if (patient1.getPhoneNumber().equals(newPatient.getPhoneNumber())){
-                    throw new RuntimeException("This phone number already exists");
-                }
-            }
-            if (!newPatient.getPhoneNumber().startsWith("+996")){
+            if (!newPatient.getPhoneNumber().startsWith("+996")) {
                 throw new RuntimeException("Number must start with +996");
             }
             patient.setPhoneNumber(newPatient.getPhoneNumber());
@@ -116,7 +106,7 @@ public class PatientServiceImpl implements PatientService {
                 }
             }
             patientRepository.delete(patient.getId());
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }

@@ -88,6 +88,9 @@
         <div style="color: red" th:if="${#fields.hasErrors('email')}">
             <span th:errors="*{email}"></span>
         </div>
+        <div th:if="${Email}">
+            <p style="color: red;">[[${Email}]]</p>
+        </div>
 
         <label for="image">Image:</label>
         <input type="text" id="image" th:field="*{image}" name="image">

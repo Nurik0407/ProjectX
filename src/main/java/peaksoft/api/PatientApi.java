@@ -1,7 +1,9 @@
 package peaksoft.api;
 
 import jakarta.validation.Valid;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,26 +34,34 @@ public class PatientApi {
     public String getAll(Model model, @PathVariable("hospitalId") Long hospitalId) {
         model.addAttribute("patients", patientService.getAll(hospitalId));
         model.addAttribute("hospital", hospitalService.findById(hospitalId));
+        model.addAttribute("hospitID", hospitalId);
         return "patient/mainPage";
     }
 
-    @GetMapping("/new")
-    public String newPatient(Model model) {
+    @GetMapping("/{hospitalId}/new")
+    public String newPatient(@PathVariable Long hospitalId, Model model) {
         model.addAttribute("patient", new Patient());
         model.addAttribute("hospitals", hospitalService.getAllHospital());
+        model.addAttribute(hospitalId);
         return "patient/new";
     }
 
-    @PostMapping("/save")
-    public String save(@ModelAttribute("patient") @Valid Patient patient,
+    @PostMapping("/{hospitalId}/save")
+    public String save(@PathVariable Long hospitalId,@ModelAttribute("patient") @Valid Patient patient,
                        BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("hospitals", hospitalService.getAllHospital());
             return "patient/new";
         }
-        Long hospitalId = patient.getHospitalId();
-        patientService.save(patient);
-        return "redirect:/patient/" + hospitalId;
+        try {
+            patientService.save(patient,hospitalId);
+            return "redirect:/patient/" + hospitalId;
+        } catch (DataIntegrityViolationException e) {
+            model.addAttribute("hospitals", hospitalService.getAllHospital());
+            model.addAttribute("phone_number", "Number already registered!");
+            model.addAttribute("Email", "This email already exists in the database");
+            return "patient/new";
+        }
     }
 
     @GetMapping("/{hospitalId}/{id}/edit")
@@ -70,8 +80,18 @@ public class PatientApi {
             model.addAttribute("patient", patient);
             return "patient/edit";
         }
-        patientService.update(id, patient);
-        return "redirect:/patient/" + patient.getHospitalId();
+        try {
+            patientService.update(id, patient);
+            return "redirect:/patient/" + patient.getHospitalId();
+        } catch (DataIntegrityViolationException e) {
+            model.addAttribute("patient", patientService.findById(id));
+            model.addAttribute("hospitals", hospitalService.getAllHospital());
+            model.addAttribute("hospitalId", patientService.findById(id).getHospitalId());
+            model.addAttribute("Email", "This email already exists in the database");
+            model.addAttribute("phone_number", "Number already registered!");
+            return "patient/edit";
+        }
+
     }
 
     @DeleteMapping("/{hospitalId}/{id}/delete")
