@@ -79,11 +79,8 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
 
     @Override
     public void delete(Long id) {
-        try {
-            en.remove(en.find(Department.class, id));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+            en.createQuery("delete  from Department  d where d.id=:id")
+                    .setParameter("id",id).executeUpdate();
     }
 
     @Override

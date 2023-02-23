@@ -27,7 +27,7 @@ public class HospitalRepositoryImpl implements HospitalRepository {
         try {
 
             return en.createQuery("select h from Hospital h", Hospital.class).getResultList();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         throw new RuntimeException();
@@ -57,7 +57,7 @@ public class HospitalRepositoryImpl implements HospitalRepository {
     public void update(Long id, Hospital newHospital) {
         Hospital oldHospital = en.find(Hospital.class, id);
         oldHospital.setId(newHospital.getId());
-        oldHospital.setName(oldHospital.getName());
+        oldHospital.setName(newHospital.getName());
         oldHospital.setAddress(newHospital.getAddress());
         oldHospital.setImage(newHospital.getImage());
     }

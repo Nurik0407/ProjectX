@@ -9,14 +9,9 @@ import peaksoft.models.Doctor;
 import peaksoft.models.Hospital;
 import peaksoft.repository.AppointmentRepository;
 import peaksoft.repository.DepartmentRepository;
-import peaksoft.repository.DoctorRepository;
 import peaksoft.repository.HospitalRepository;
-import peaksoft.service.AppointmentService;
 import peaksoft.service.DepartmentService;
-import peaksoft.service.DoctorService;
-import peaksoft.service.HospitalService;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -33,8 +28,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     private final HospitalRepository hospitalRepository;
     private final AppointmentRepository appointmentRepository;
-    private final DoctorRepository doctorRepository;
-
 
     @Override
     public List<Department> getAll(Long id) {
@@ -90,39 +83,21 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Transactional
     @Override
     public void delete(Long id) {
+        Department department = departmentRepository.findById(id);
+        List<Hospital> hospitals = hospitalRepository.getAllHospital();
 
-        try {
-            Department department = departmentRepository.findById(id);
-            List<Hospital> hospitals = hospitalRepository.getAllHospital();
-            for (int z = 0; z < hospitals.size(); z++) {
-                Hospital hospital = hospitals.get(z);
-                List<Appointment> appointments = hospital.getAppointmentList();
-                if (appointments != null) {
-                    Iterator<Appointment> iterator = appointments.iterator();
-                    while (iterator.hasNext()) {
-                        Appointment appointment = iterator.next();
-                        if (appointment.getDepartment() != null && appointment.getDepartment().getId().equals(id)) {
-                            iterator.remove();
-                            appointmentRepository.delete(appointment.getId());
-                        }
-                    }
-                }
+        for (Hospital hospital : hospitals) {
+            List<Appointment> appointments = hospital.getAppointmentList();
+            if (appointments != null) {
+                List<Appointment> appointmentList = appointments.stream().filter(s -> s.getDepartment().getId().equals(id)).toList();
+                appointmentList.forEach(s -> appointmentRepository.delete(s.getId()));
             }
-
-            if (department.getDoctors() != null) {
-                for (int i = 0; i < department.getDoctors().size(); i++) {
-                    department.getDoctors().get(i).getDepartments().remove(department);
-                }
-            }
-            if (department.getHospital() != null) {
-                for (int i = 0; i < department.getHospital().getDepartmentList().size(); i++) {
-                    department.getHospital().getDepartmentList().remove(department);
-                }
-            }
-            departmentRepository.delete(id);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
         }
+
+        List<Department> departments = department.getHospital().getDepartmentList();
+        departments.removeIf(s -> s.getId().equals(id));
+
+        departmentRepository.delete(id);
     }
 
     @Override
@@ -130,17 +105,6 @@ public class DepartmentServiceImpl implements DepartmentService {
         try {
             return departmentRepository.getAllByHospitalId(id);
 
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        throw new RuntimeException();
-    }
-
-
-    @Override
-    public List<Department> getAllByDoctorId(Long id) {
-        try {
-            return departmentRepository.getAllByDoctorId(id);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

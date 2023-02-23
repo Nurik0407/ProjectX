@@ -1,12 +1,9 @@
 package peaksoft.service.serviceImpll;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import peaksoft.models.Appointment;
-import peaksoft.models.Department;
 import peaksoft.models.Hospital;
 import peaksoft.repository.AppointmentRepository;
 import peaksoft.repository.HospitalRepository;
@@ -59,16 +56,14 @@ public class AppointmentServiceImpl implements AppointmentService {
     public void save(Appointment appointment, Long hospitalId) {
         try {
             Hospital hospital = hospitalRepository.findById(hospitalId);
-            Appointment newAppointment = new Appointment();
-            newAppointment.setId(appointment.getId());
             DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate date = LocalDate.parse(appointment.getDate(), format);
-            newAppointment.setLocalDate(date);
-            newAppointment.setPatient(patientService.findById(appointment.getPatientId()));
-            newAppointment.setDoctor(doctorService.findById(appointment.getDoctorId()));
-            newAppointment.setDepartment(departmentService.findById(appointment.getDepartmentId()));
-            hospital.addAppointment(newAppointment);
-            appointmentRepository.save(newAppointment);
+            appointment.setLocalDate(date);
+            appointment.setPatient(patientService.findById(appointment.getPatientId()));
+            appointment.setDoctor(doctorService.findById(appointment.getDoctorId()));
+            appointment.setDepartment(departmentService.findById(appointment.getDepartmentId()));
+            hospital.addAppointment(appointment);
+            appointmentRepository.save(appointment);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -83,21 +78,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
     }
 
-    @Transactional
     @Override
     public void delete(Long id, Long hospitalId) {
-        try {
-            List<Appointment> appointments = hospitalRepository.findById(hospitalId).getAppointmentList();
-            if (appointments != null) {
-                for (int i = 0; i < appointments.size(); i++) {
-                    if (appointments.get(i).getId().equals(id)) {
-                        appointments.remove(appointmentRepository.findById(id));
-                    }
-                }
-            }
             appointmentRepository.delete(id);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
     }
 }

@@ -25,9 +25,8 @@ public class DoctorRepositoryImpl implements DoctorRepository {
     @Override
     public List<Doctor> getAll() {
         try {
-
             return en.createQuery("select l from Doctor l ", Doctor.class).getResultList();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         throw new RuntimeException();
@@ -36,10 +35,9 @@ public class DoctorRepositoryImpl implements DoctorRepository {
     @Override
     public List<Doctor> getAll(Long id) {
         try {
-
             return en.createQuery("select l from Doctor l join l.hospital h where h.id = :id", Doctor.class)
                     .setParameter("id", id).getResultList();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         throw new RuntimeException();
@@ -48,9 +46,8 @@ public class DoctorRepositoryImpl implements DoctorRepository {
     @Override
     public Doctor findById(Long id) {
         try {
-
             return en.find(Doctor.class, id);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         throw new RuntimeException();
@@ -76,10 +73,9 @@ public class DoctorRepositoryImpl implements DoctorRepository {
 
     @Override
     public void delete(Long id) {
-        try {
-            en.remove(en.find(Doctor.class, id));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        en.createQuery(" delete  from  Doctor d where d.id=:id").
+                setParameter("id", id).executeUpdate();
     }
+
+
 }

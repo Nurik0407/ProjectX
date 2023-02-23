@@ -1,21 +1,15 @@
 package peaksoft.service.serviceImpll;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Transient;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import peaksoft.models.Appointment;
-import peaksoft.models.Hospital;
 import peaksoft.models.Patient;
 import peaksoft.repository.AppointmentRepository;
 import peaksoft.repository.HospitalRepository;
 import peaksoft.repository.PatientRepository;
-import peaksoft.service.HospitalService;
 import peaksoft.service.PatientService;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -70,7 +64,6 @@ public class PatientServiceImpl implements PatientService {
                     throw new RuntimeException();
                 }
             }
-
             patient.setFirstName(newPatient.getFirstName());
             patient.setLastName(newPatient.getLastName());
             patient.setEmail(newPatient.getEmail());
@@ -88,31 +81,16 @@ public class PatientServiceImpl implements PatientService {
     public void delete(Long id) {
         try {
             Patient patient = patientRepository.findById(id);
+            List<Appointment> appointments = patient.getAppointments();
+
+            if (appointments != null) {
+                appointments.stream().filter(s -> s.getPatient().getId().equals(id)).
+                        forEach(s -> appointmentRepository.delete(s.getId()));
+            }
 
             List<Patient> patients = patient.getHospital().getPatientList();
-            if (patients != null) {
-                for (int i = 0; i < patients.size(); i++) {
-                    if (patients.get(i).getId().equals(id)) {
-                        patients.remove(patient);
-                    }
-                }
-            }
+            patients.removeIf(s -> s.getId().equals(id));
 
-
-            List<Hospital> hospitals = hospitalRepository.getAllHospital();
-            for (int z = 0; z < hospitals.size(); z++) {
-                List<Appointment> appointments = hospitals.get(z).getAppointmentList();
-                if (appointments != null) {
-                    Iterator<Appointment> iterator = appointments.listIterator();
-                    while (iterator.hasNext()) {
-                        Appointment appointment = iterator.next();
-                        if (appointment.getPatient() != null && appointment.getPatient().getId().equals(id)) {
-                            iterator.remove();
-                            appointmentRepository.delete(appointment.getId());
-                        }
-                    }
-                }
-            }
             patientRepository.delete(patient.getId());
         } catch (Exception e) {
             System.out.println(e.getMessage());

@@ -6,13 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import peaksoft.models.Department;
 import peaksoft.models.Hospital;
 import peaksoft.service.HospitalService;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Zholdoshov Nuradil
  * peaksoft.api

@@ -138,7 +138,7 @@
 
 <div class="form-container">
     <form name="my-form" th:action="@{/appointment/{hospitalId}/{id}/update(hospitalId=${hospId},id=${appointment.getId()})}"
-          th:method="POST" th:object="${appointment}">
+          th:method="PUT" th:object="${appointment}">
 
         <div>
             <label for="birthday">Recording date:</label>

@@ -1,10 +1,8 @@
 package peaksoft.api;
 
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.models.Appointment;
 import peaksoft.service.*;
@@ -78,6 +76,4 @@ public class AppointmentApi {
         appointmentService.delete(id,hospitalId);
         return "redirect:/appointment/" + hospitalId;
     }
-
-
 }

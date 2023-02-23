@@ -1,10 +1,7 @@
 package peaksoft.service.serviceImpll;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import peaksoft.models.Department;
 import peaksoft.models.Hospital;
 import peaksoft.repository.HospitalRepository;
 import peaksoft.service.HospitalService;
@@ -22,15 +19,6 @@ public class HospitalServiceImpl implements HospitalService {
 
     private final HospitalRepository hospitalRepository;
 
-    @Override
-    public List<Hospital> getAllHospital() {
-        try {
-            return hospitalRepository.getAllHospital();
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-        }
-        throw new RuntimeException();
-    }
 
     @Override
     public void saveHospital(Hospital hospital) {
@@ -62,21 +50,8 @@ public class HospitalServiceImpl implements HospitalService {
 
     @Override
     public void delete(Long id) {
-        try {
             hospitalRepository.delete(id);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
-    @Override
-    public List<Department> getAllDepartmentByHospitalId(Long id) {
-        try {
-            return hospitalRepository.getAllDepartmentByHospitalId(id);
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-        }
-        return null;
     }
 
     @Override

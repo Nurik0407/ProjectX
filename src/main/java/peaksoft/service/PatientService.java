@@ -1,7 +1,6 @@
 package peaksoft.service;
 
 import peaksoft.models.Patient;
-
 import java.util.List;
 
 /**

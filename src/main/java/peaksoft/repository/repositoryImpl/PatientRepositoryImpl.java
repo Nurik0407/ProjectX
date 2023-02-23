@@ -44,9 +44,8 @@ public class PatientRepositoryImpl implements PatientRepository {
     @Override
     public Patient findById(Long id) {
         try {
-
             return en.find(Patient.class, id);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         throw new RuntimeException();
@@ -73,12 +72,8 @@ public class PatientRepositoryImpl implements PatientRepository {
     @Override
     public void delete(Long id) {
         try {
-
-            Patient patient = en.find(Patient.class, id);
-            patient.getHospital().getPatientList().remove(patient);
-            patient.setHospital(null);
             en.remove(en.find(Patient.class, id));
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }

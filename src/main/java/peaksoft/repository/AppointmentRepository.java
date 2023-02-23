@@ -1,9 +1,7 @@
 package peaksoft.repository;
 
 import peaksoft.models.Appointment;
-import peaksoft.models.Department;
 
-import java.util.Collection;
 import java.util.List;
 
 /**

@@ -13,7 +13,9 @@ import peaksoft.repository.AppointmentRepository;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Zholdoshov Nuradil
@@ -29,10 +31,9 @@ public class AppointmentRepositoryImpl implements AppointmentRepository {
     @Override
     public List<Appointment> getAll(Long id) {
         try {
-
-            return en.createQuery("select a from Hospital h join h.appointmentList a where h.id=:id order by a.localDate ", Appointment.class)
+            return en.createQuery("select a from Hospital h join h.appointmentList a  where h.id=:id order by a.id desc ", Appointment.class)
                     .setParameter("id", id).getResultList();
-        }catch (HibernateException e){
+        } catch (HibernateException e) {
             System.out.println(e.getMessage());
         }
         throw new RuntimeException();
@@ -43,7 +44,7 @@ public class AppointmentRepositoryImpl implements AppointmentRepository {
         try {
 
             return en.find(Appointment.class, id);
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         throw new RuntimeException();
@@ -61,13 +62,13 @@ public class AppointmentRepositoryImpl implements AppointmentRepository {
     @Override
     public void update(Long id, Appointment newAppointment) {
         try {
-            Appointment appointment = en.find(Appointment.class,id);
+            Appointment appointment = en.find(Appointment.class, id);
             DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate date = LocalDate.parse(newAppointment.getDate(), format);
             appointment.setLocalDate(date);
-            appointment.setPatient(en.find(Patient.class,newAppointment.getPatientId()));
-            appointment.setDoctor(en.find(Doctor.class,newAppointment.getDoctorId()));
-            appointment.setDepartment(en.find(Department.class,newAppointment.getDepartmentId()));
+            appointment.setPatient(en.find(Patient.class, newAppointment.getPatientId()));
+            appointment.setDoctor(en.find(Doctor.class, newAppointment.getDoctorId()));
+            appointment.setDepartment(en.find(Department.class, newAppointment.getDepartmentId()));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -76,10 +77,13 @@ public class AppointmentRepositoryImpl implements AppointmentRepository {
     @Override
     public void delete(Long id) {
         try {
+            List<Hospital> hospitals = en.createQuery("select h from Hospital h ", Hospital.class).getResultList();
+            hospitals.forEach(s -> s.getAppointmentList().removeIf(a -> a.getId().equals(id)));
             en.remove(en.find(Appointment.class, id));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
     }
 
     @Override
@@ -87,7 +91,7 @@ public class AppointmentRepositoryImpl implements AppointmentRepository {
         try {
             return en.createQuery("select l from Appointment  l order by l.localDate", Appointment.class)
                     .getResultList();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         throw new RuntimeException();

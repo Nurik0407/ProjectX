@@ -9,6 +9,8 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jakarta.persistence.CascadeType.ALL;
+
 /**
  * Zholdoshov Nuradil
  * peaksoft.models
@@ -34,13 +36,13 @@ public class Hospital {
     private String address;
     @NotEmpty(message = "Insert photo!")
     private String image;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "hospital", fetch = FetchType.EAGER)
+    @OneToMany(cascade = ALL, mappedBy = "hospital", fetch = FetchType.EAGER)
     private List<Doctor> doctorList;
-    @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "hospital", cascade = ALL, fetch = FetchType.EAGER)
     private List<Patient> patientList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "hospital")
+    @OneToMany(cascade = ALL, mappedBy = "hospital")
     private List<Department> departmentList;
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(cascade = ALL,fetch = FetchType.LAZY)
     private List<Appointment> appointmentList;
 
     public void addAppointment(Appointment appointment){

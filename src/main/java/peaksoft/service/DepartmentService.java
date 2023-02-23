@@ -23,7 +23,6 @@ public interface DepartmentService {
     void delete(Long id);
     List<Department> getAllByHospitalId(Long id);
 
-    List<Department> getAllByDoctorId(Long id);
 
     List<Doctor> getAllDoByDepId(Long departmentId);
 }
